@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link
 import styles from "./EmptyCart.module.css";
 import useStore from "../store/zustandStore"; 
 
@@ -16,9 +15,7 @@ function EmptyCart() {
             <br />
             Fill it with clothes and make it happy!
           </p>
-          <Link to="/items" className={styles.continueButton}> {/* Use Link here */}
-            Continue Shopping
-          </Link>
+          <button className={styles.continueButton}>Continue Shopping</button>
         </>
       ) : (
         <>

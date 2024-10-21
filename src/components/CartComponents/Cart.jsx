@@ -8,38 +8,62 @@ import useStore from "../store/zustandStore";
 function Cart() {
   const cartItems = useStore((state) => state.cartItems);
 
+  // Helper function to calculate subtotal for each product
+  const calculateSubtotal = (item) => item.price * item.quantity;
+
+  // Helper function to calculate total
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + calculateSubtotal(item), 0);
+  };
+
   return (
-    <main className={styles.cart}>
+    <div className={styles.cartPage}>
       <Header />
-      <section className={styles.cartContent}>
-        <div className={styles.cartLayout}>
-          <div className={styles.imageColumn}>
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/561c62489c7f15fa2d276c46181026fafa1a5f799999be7269bed826c7cffdc5?placeholderIfAbsent=true&apiKey=63cef383af9641cc969e43f7e6acc6c2"
-              alt="Cart illustration"
-              className={styles.cartImage}
-            />
-          </div>
-          <div className={styles.contentColumn}>
-            {cartItems.length === 0 ? (
-              <EmptyCart /> // If cart is empty, show EmptyCart component
-            ) : (
-              <ul className={styles.cartItemList}>
-                {cartItems.map((item, index) => (
-                  <li key={index} className={styles.cartItem}>
-                    <h3>{item.name}</h3>
-                    <p>{item.price}</p>
-                    {/* You can add more details like quantity or remove button */}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      </section>
+      <main className={styles.cart}>
+        <section className={styles.cartContent}>
+          <h1 className={styles.cartTitle}>Cart</h1>
+          {cartItems.length === 0 ? (
+            <EmptyCart /> // If the cart is empty, show EmptyCart component
+          ) : (
+            <div className={styles.cartDetails}>
+              <table className={styles.cartTable}>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Sub Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <img
+                          src={item.imageUrl || "http://b.io/placeholder-image"}
+                          alt={item.name}
+                          className={styles.productImage}
+                        />
+                      </td>
+                      <td>{item.name}</td>
+                      <td>{item.quantity}</td>
+                      <td>${calculateSubtotal(item).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Total Display */}
+              <div className={styles.totalWrapper}>
+                <div className={styles.totalLabel}>Total:</div>
+                <div className={styles.totalAmount}>${calculateTotal().toFixed(2)}</div>
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }
 
